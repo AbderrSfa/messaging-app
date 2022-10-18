@@ -1,21 +1,21 @@
+import { createServer } from 'http';
 import express from 'express';
 const app = express();
-const port = 4040;
 import { Server } from 'socket.io';
-import cors from 'cors';
+// import cors from 'cors';
+const port = 4040;
 
-app.use(cors());
-
-const io = new Server();
+const httpServer = createServer();
+const io = new Server(httpServer, {
+	cors: { origin: 'http://localhost:3000' },
+});
 
 io.on('connection', (socket) => {
-	console.log(`socket ${socket.id} connected`);
-	console.log(socket);
-
-	// upon disconnection
-	socket.on('disconnect', (reason) => {
-		console.log(`socket ${socket.id} disconnected due to ${reason}`);
+	socket.on('send-message', (message) => {
+		socket.broadcast.emit('recieve-message', message);
 	});
 });
 
-app.listen(4040, () => console.log(`Server is listening on port ${port}...`));
+httpServer.listen(4040, () =>
+	console.log(`Server is running on port ${port}...`)
+);
