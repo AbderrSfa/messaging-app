@@ -1,20 +1,30 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import { io } from "socket.io-client";
 import { IoSend } from "react-icons/io5";
 import Message from "../components/Message";
 
-// const socket = io("http://localhost:4040");
+import MessageT from "../typings/MessageT";
+
+const socket = io("http://localhost:4040");
 
 const Home: NextPage = () => {
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([]);
-  // socket.on("recieve-message", (message) => {});
+	const [messages, setMessages] = useState<MessageT[]>([]);
+
+	socket.off('get-message').on("get-message", (message) => {		
+    setMessages((currList) => [...currList, message]);
+  });
 
   const sendMessage = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // socket.emit("send-message", message);
+    const messageData = {
+      text: message,
+      mine: Math.random() < 0.5,
+		};
+    socket.emit("send-message", messageData);
+    setMessages((currList) => [...currList, messageData]);
     setMessage("");
   };
 
@@ -27,17 +37,10 @@ const Home: NextPage = () => {
       </Head>
 
       <main className="mx-10 flex h-screen flex-col justify-between">
-        <section className="my-4 overflow-y-scroll px-4">
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
+        <section className="my-4 overflow-y-scroll px-4 flex-1">
+          {messages.map((msg, idx) => {
+            return <Message key={idx} text={msg.text} mine={msg.mine} />;
+          })}
         </section>
         <hr />
         <section className="m-auto my-4 w-1/2">
