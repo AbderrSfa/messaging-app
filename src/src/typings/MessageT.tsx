@@ -1,4 +1,5 @@
 export default interface MessageT {
   text: string;
-  mine: boolean;
+	userID: number;
+	timestamp: string;
 }
