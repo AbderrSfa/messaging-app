@@ -7,7 +7,7 @@ type Props = {
 
 const Message = ({ msg, myID }: Props) => {
 	return (
-		<article className="my-2">
+		<article className="my-4">
 			{msg.userID === myID ? (
 				<div className="flex items-center justify-end">
 					<p className="mx-2 text-sm text-slate-400">{msg.timestamp}</p>

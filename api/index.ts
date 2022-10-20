@@ -11,14 +11,8 @@ const io = new Server(httpServer, {
 });
 
 io.on('connection', (socket) => {
-	console.log('connected');
-
 	socket.on('send-message', (message) => {
 		socket.broadcast.emit('get-message', message);
-	});
-
-	socket.on('disconnect', (reason) => {
-		console.log('disconnected ', reason);
 	});
 });
 

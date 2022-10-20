@@ -62,7 +62,7 @@ const Home: NextPage = () => {
 					<form onSubmit={sendMessage}>
 						<div className="flex items-center justify-between gap-2 rounded-full bg-slate-200 py-2 px-4">
 							<input
-								className="w-full bg-inherit"
+								className="w-full bg-inherit focus:outline-none"
 								placeholder="Aa"
 								type="text"
 								value={message}
